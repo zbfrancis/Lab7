@@ -79,36 +79,123 @@
 
     <!-- Main Script -->
     <script type="module">
+			
       // This function should fetch all of the data from the given endpoint.
       // From the 4 CRUD actions, this is the READ action, and uses the GET http method.
       // The main difference from fetchOne() will be the URL you request from; check
       // the writeup to view the URL pattern for fetch one and fetch all
       function fetchAll() {
-        // TODO
+				document.getElementById('recordForm').style.display = "none";
+				document.getElementById('recordIDcontainer').style.display = "none";
+				fetch(document.getElementById('endpoint').value)
+					.then(
+						function(response) {
+							if (response.status !== 200) {
+								document.getElementById('output').value = 'Looks like there was a problem. Status Code: ' +
+									response.status;
+								return;
+							}
+							response.json().then(function(data) {
+								document.getElementById('output').value = String(JSON.stringify(data));
+							});
+						}
+					)
+					.catch(function(err) {
+						document.getElementById('output').value = err.message;
+					});
       }
 
       // This function should fetch one entry from the given endpoint.
       // From the 4 CRUD actions, this is the READ action, and uses the GET http method.
       // The main difference from fetchAll() will be the URL you request from; check
       // the writeup to view the URL pattern for fetch one and fetch all
-      function fetchOne() {
-        // TODO
+      function fetchOne(){
+				document.getElementById('recordForm').style.display = "none";
+				document.getElementById('recordIDcontainer').style.display = "none";
+				let id = prompt("Please enter the ID of the data:");
+        fetch(document.getElementById('endpoint').value+"/"+id)
+					.then(
+						function(response) {
+							if (response.status !== 200) {
+								document.getElementById('output').value = 'Looks like there was a problem. Status Code: ' +
+									response.status;
+								return;
+							}
+							response.json().then(function(data) {
+								document.getElementById('output').value = String(JSON.stringify(data));
+							});
+						}
+					)
+					.catch(function(err) {
+						document.getElementById('output').value = err.message;
+					});
       }
 
       // This function should use fetch to create one entry in the given endpoint.
       // From the 4 CRUD actions, this is the CREATE action, and uses the POST http method.
       // The main difference from updateRecord() will be the URL you send data to; check
       // the writeup to view the URL pattern for create and update
-      function createRecord() {
-        // TODO
+      function createRecord(info) {
+				if(info == 'show') {
+					document.getElementById('recordForm').style.display = "block";
+					document.getElementById('recordIDcontainer').style.display = "none";
+				} else {
+					const sentData = { author: document.getElementById('author').value, title: document.getElementById('title').value };
+					fetch(document.getElementById('endpoint').value, {
+						method: 'POST',
+						headers: { 'Content-Type': 'application/json',},
+						body: JSON.stringify(sentData),
+					})
+					.then(
+						function(response) {
+							if (response.status !== 201) {
+								document.getElementById('output').value = 'Looks like there was a problem. Status Code: ' +
+									response.status;
+								return;
+							}
+							response.json().then(function(data) {
+								document.getElementById('output').value = String(JSON.stringify(data));
+							});
+						}
+					)
+					.catch(function(err) {
+						document.getElementById('output').value = err.message;
+					});
+				}
+				
       }
 
       // This function should use fetch to update one existing entry in the given endpoint.
       // From the 4 CRUD actions, this is the UPDATE action, and uses the PUT http method.
       // The main difference from createRecord() will be the URL you send data to; check
       // the writeup to view the URL pattern for create and update
-      function updateRecord() {
-        // TODO
+      function updateRecord(info) {
+        if(info == 'show') {
+					document.getElementById('recordForm').style.display = "block";
+					document.getElementById('recordIDcontainer').style.display = "block";
+				} else {
+					const sentData = { author: document.getElementById('author').value, title: document.getElementById('title').value };
+					fetch(document.getElementById('endpoint').value+"/"+document.getElementById('recordID').value, {
+						method: 'PUT',
+						headers: { 'Content-Type': 'application/json',},
+						body: JSON.stringify(sentData),
+					})
+					.then(
+						function(response) {
+							if (response.status !== 200) {
+								document.getElementById('output').value = 'Looks like there was a problem. Status Code: ' +
+									response.status;
+								return;
+							}
+							response.json().then(function(data) {
+								document.getElementById('output').value = String(JSON.stringify(data));
+							});
+						}
+					)
+					.catch(function(err) {
+						document.getElementById('output').value = err.message;
+					});
+				}
       }
 
       // This function should use fetch to delete one existing entry in the given endpoint.
@@ -117,7 +204,25 @@
       // request; check the writeup to view the URL pattern for get one and delete. THERE IS NO 
       // delete all, only delete one.
       function deleteRecord() {
-        // TODO
+        document.getElementById('recordForm').style.display = "none";
+				document.getElementById('recordIDcontainer').style.display = "none";
+				let id = prompt("Please enter the ID of the data:");
+        fetch(document.getElementById('endpoint').value+"/"+id, {method: 'DELETE'})
+					.then(
+						function(response) {
+							if (response.status !== 200) {
+								document.getElementById('output').value = 'Looks like there was a problem. Status Code: ' +
+									response.status;
+								return;
+							}
+							response.json().then(function(data) {
+								document.getElementById('output').value = String(JSON.stringify(data));
+							});
+						}
+					)
+					.catch(function(err) {
+						document.getElementById('output').value = err.message;
+					});
       }
 
       window.addEventListener('DOMContentLoaded', () => {
